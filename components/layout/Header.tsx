@@ -40,7 +40,7 @@ export function Header() {
           <Menu className="h-5 w-5" />
         </button>
 
-        <Link href="/" aria-label="V-CUBE Designs home" className="lg:flex-1">
+        <Link href="/" aria-label="V-CUBE Designs home" className="lg:flex-1" data-cursor="hover">
           <Logo />
         </Link>
 
@@ -49,7 +49,8 @@ export function Header() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-[0.72rem] tracking-[0.2em] uppercase text-ink/85 hover:text-ink transition-colors"
+              data-cursor="hover"
+              className="text-[0.72rem] tracking-[0.2em] uppercase text-ink/85 hover:text-ink transition-colors underline-animate"
             >
               {item.label}
             </Link>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ColourSwatchGroup } from "@/components/commerce/ColourSwatch";
 import { SizeSelector } from "@/components/commerce/SizeSelector";
+import { Magnetic } from "@/components/motion/Magnetic";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/format";
 import type { Product } from "@/data/products";
@@ -86,12 +87,28 @@ export function ProductBuyPanel({ product }: { product: Product }) {
       </div>
 
       <div className="grid grid-cols-2 gap-3 pt-2">
-        <button type="button" onClick={handleAdd} className="btn-primary" disabled={!unitPrice}>
-          Add to Bag
-        </button>
-        <button type="button" onClick={handleBuyNow} className="btn-outline" disabled={!unitPrice}>
-          Buy Now
-        </button>
+        <Magnetic strength={0.2}>
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="btn-primary w-full"
+            disabled={!unitPrice}
+            data-cursor="hover"
+          >
+            Add to Bag
+          </button>
+        </Magnetic>
+        <Magnetic strength={0.2}>
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            className="btn-outline w-full"
+            disabled={!unitPrice}
+            data-cursor="hover"
+          >
+            Buy Now
+          </button>
+        </Magnetic>
       </div>
     </div>
   );

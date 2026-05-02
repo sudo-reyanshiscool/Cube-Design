@@ -5,6 +5,7 @@ import { useMemo, useCallback } from "react";
 import { Container } from "@/components/layout/Container";
 import { ProductCard } from "@/components/commerce/ProductCard";
 import { ColourSwatch } from "@/components/commerce/ColourSwatch";
+import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import { products } from "@/data/products";
 import { tokens, type ColourName } from "@/tokens";
 import { cn } from "@/lib/format";
@@ -201,11 +202,16 @@ export function ShopView() {
               Nothing matches that combination — try clearing a filter.
             </p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+            <StaggerGroup
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12"
+              staggerChildren={0.06}
+            >
               {filtered.map((p) => (
-                <ProductCard key={p.slug} product={p} />
+                <StaggerItem key={p.slug}>
+                  <ProductCard product={p} />
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGroup>
           )}
         </section>
       </div>

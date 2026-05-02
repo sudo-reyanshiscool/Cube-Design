@@ -5,6 +5,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartSheet } from "@/components/commerce/CartSheet";
 import { Analytics } from "@/components/Analytics";
+import { Cursor } from "@/components/motion/Cursor";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { brand } from "@/data/brand";
 
 const display = Cormorant_Garamond({
@@ -77,9 +79,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-IN" className={`${display.variable} ${sans.variable}`}>
       <body className="min-h-screen flex flex-col bg-bone text-ink">
+        <Cursor />
         <Header />
         <main id="main" className="flex-1">
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
         <Footer />
         <CartSheet />
