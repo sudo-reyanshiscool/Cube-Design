@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bone: #f5f1ea;
+  --ink: #0e0e0c;
+  --line: rgba(14, 14, 12, 0.12);
+  --line-strong: rgba(14, 14, 12, 0.22);
+  --brass: #b08d57;
+}
+
+html, body {
+  background: var(--bone);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bone);
+}
+
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  *:focus-visible {
+    outline: 1px solid var(--brass);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .label {
+    @apply text-label uppercase tracking-widest font-sans text-ink/70;
+  }
+  .label-light {
+    @apply text-label uppercase tracking-widest font-sans text-bone/70;
+  }
+  .hairline {
+    @apply border-t border-ink/15;
+  }
+  .hairline-b {
+    @apply border-b border-ink/15;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm uppercase tracking-widest transition-colors duration-300 ease-editorial;
+  }
+  .btn-primary {
+    @apply btn bg-ink text-bone hover:bg-ink-soft;
+  }
+  .btn-outline {
+    @apply btn border border-ink text-ink hover:bg-ink hover:text-bone;
+  }
+  .btn-ghost {
+    @apply btn text-ink hover:text-brass;
+  }
+}
+
+@layer utilities {
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.03;
+    mix-blend-mode: multiply;
+    z-index: 1;
+  }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
