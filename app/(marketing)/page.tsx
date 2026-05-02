@@ -4,41 +4,37 @@ import { Container } from "@/components/layout/Container";
 import { Placeholder } from "@/components/commerce/Placeholder";
 import { ProductCard } from "@/components/commerce/ProductCard";
 import { SectionHeader } from "@/components/editorial/SectionHeader";
+import { ReviewsStrip } from "@/components/editorial/ReviewsStrip";
 import { LifestyleStrip } from "@/components/editorial/LifestyleStrip";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Ticker } from "@/components/motion/Ticker";
 import { products, getProduct } from "@/data/products";
 import { journal } from "@/data/journal";
-import { brand } from "@/data/brand";
+import { ArrowRight } from "lucide-react";
 
-const triptych = [
-  {
-    href: "/shop?category=Desk",
-    eyebrow: "Desk",
-    title: "Mats, mouse pads, mobile stands.",
-    tone: "warm" as const,
-    no: "01",
-  },
-  {
-    href: "/shop?category=Home",
-    eyebrow: "Home",
-    title: "Trays, coasters, placemats, tissue.",
-    tone: "navy" as const,
-    no: "02",
-  },
-  {
-    href: "/shop?category=Sets",
-    eyebrow: "Sets",
-    title: "Compositions, considered together.",
-    tone: "tan" as const,
-    no: "03",
-  },
+const categoryTiles = [
+  { href: "/shop?category=Desk", eyebrow: "Desk", count: 4, tone: "warm" as const },
+  { href: "/shop?category=Home", eyebrow: "Home", count: 4, tone: "navy" as const },
+  { href: "/shop?category=Sets", eyebrow: "Sets", count: 1, tone: "tan" as const },
 ];
 
 export default function HomePage() {
   const featured = getProduct("executive-v-cube-set");
-  const bestsellers = ["desk-mat-stitched", "valet-tray", "tissue-holder", "mobile-stand"]
+
+  // Lead with the products people actually buy.
+  const topPicks = [
+    "desk-mat-stitched",
+    "executive-v-cube-set",
+    "valet-tray",
+    "tissue-holder",
+    "mobile-stand",
+    "coaster-set",
+  ]
+    .map((s) => products.find((p) => p.slug === s))
+    .filter(Boolean) as typeof products;
+
+  const newArrivals = ["desk-mat-dual-color", "dining-table-placemats", "pen-holder", "mouse-pad"]
     .map((s) => products.find((p) => p.slug === s))
     .filter(Boolean) as typeof products;
 
@@ -48,35 +44,28 @@ export default function HomePage() {
 
       <Ticker />
 
-      {/* Category triptych */}
-      <section className="py-20 lg:py-28">
+      {/* Shop by category — quick links */}
+      <section className="py-10 lg:py-14 border-b border-ink/10">
         <Container>
-          <Reveal>
-            <SectionHeader
-              eyebrow="The catalogue"
-              title="Three rooms, one language."
-              intro="We design across the desk and the home using a single material vocabulary — so a tray on the dresser belongs to the same family as the mat on the desk."
-            />
-          </Reveal>
-          <StaggerGroup className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-            {triptych.map((card, i) => (
-              <StaggerItem key={card.eyebrow}>
+          <StaggerGroup className="grid grid-cols-3 gap-3 lg:gap-5">
+            {categoryTiles.map((c) => (
+              <StaggerItem key={c.eyebrow}>
                 <Link
-                  href={card.href}
+                  href={c.href}
                   data-cursor="hover"
-                  className={`group relative block overflow-hidden ${i === 1 ? "md:translate-y-8" : ""}`}
+                  className="group relative block overflow-hidden border border-ink/10"
                 >
                   <div className="transition-transform duration-700 ease-editorial group-hover:scale-[1.04]">
-                    <Placeholder label={`Category — ${card.eyebrow}`} ratio="3 / 4" tone={card.tone} />
+                    <Placeholder label={`Shop ${c.eyebrow}`} ratio="16 / 10" tone={c.tone} />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 p-6 text-bone">
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <p className="label-light mb-2">{card.eyebrow}</p>
-                        <p className="font-display text-2xl leading-tight max-w-[16ch]">{card.title}</p>
-                      </div>
-                      <span className="font-display text-3xl text-bone/60">{card.no}</span>
+                  <div className="absolute inset-x-0 bottom-0 p-3 lg:p-5 flex items-center justify-between text-bone">
+                    <div>
+                      <p className="label-light mb-0.5">{c.eyebrow}</p>
+                      <p className="text-[0.7rem] tracking-[0.18em] uppercase text-bone/70">
+                        Shop {c.count} {c.count === 1 ? "piece" : "pieces"}
+                      </p>
                     </div>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </Link>
               </StaggerItem>
@@ -85,31 +74,69 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Featured: Executive set */}
+      {/* TOP PICKS — the big product grid above the fold */}
+      <section className="py-20 lg:py-24">
+        <Container>
+          <Reveal>
+            <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+              <div className="space-y-3">
+                <p className="label">Most ordered</p>
+                <h2 className="font-display text-display-md leading-tight text-balance">
+                  The catalogue, by popularity.
+                </h2>
+              </div>
+              <Magnetic>
+                <Link href="/shop" className="btn-outline" data-cursor="hover">
+                  Shop all 10 pieces <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </Magnetic>
+            </div>
+          </Reveal>
+
+          <StaggerGroup className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 lg:gap-x-8" staggerChildren={0.08}>
+            {topPicks.map((p) => (
+              <StaggerItem key={p.slug}>
+                <ProductCard product={p} />
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </Container>
+      </section>
+
+      {/* Featured set — Executive V-Cube */}
       {featured && (
-        <section className="bg-ink text-bone py-24 lg:py-32 grain relative">
-          <span className="hidden lg:block absolute right-6 top-12 vrt-label text-bone/35">
-            Featured composition · Nº 03
-          </span>
+        <section className="bg-ink text-bone py-20 lg:py-28 grain relative">
           <Container className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative">
-            <Reveal className="lg:col-span-7 order-2 lg:order-1">
+            <Reveal className="lg:col-span-7">
               <Placeholder label="Executive V-Cube Set — flat lay" ratio="5 / 4" tone="navy" />
             </Reveal>
-            <div className="lg:col-span-5 order-1 lg:order-2 space-y-6">
-              <Reveal delay={0}>
-                <p className="label-light">Featured composition</p>
-              </Reveal>
-              <Reveal delay={0.1}>
+            <div className="lg:col-span-5 space-y-5">
+              <Reveal><p className="label-light">Save 18% as a set</p></Reveal>
+              <Reveal delay={0.05}>
                 <h2 className="font-display text-display-lg leading-[1.05] text-balance">
-                  The Executive V-Cube Set.
+                  Six pieces. One desk. <span className="italic text-bone/70">From ₹5,990.</span>
                 </h2>
               </Reveal>
-              <Reveal delay={0.2}>
+              <Reveal delay={0.12}>
                 <p className="text-bone/75 leading-relaxed text-pretty">
-                  Six considered objects, drawn as one — the Stitched Desk Mat, Valet Tray, Coaster set, Tissue Holder, Mobile Stand and Pen Holder. Arrives boxed, ready to gift.
+                  The Stitched Desk Mat, Valet Tray, Coaster set, Tissue Holder, Mobile Stand and Pen Holder — composed in matched leather and stitched edges. Arrives boxed, ready to gift.
                 </p>
               </Reveal>
-              <Reveal delay={0.3}>
+              <Reveal delay={0.18}>
+                <ul className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2 text-sm">
+                  {[
+                    "Mat 90 × 45 cm",
+                    "Tray 30 × 20 cm",
+                    "4 coasters + holder",
+                    "Pen holder + stand",
+                  ].map((line) => (
+                    <li key={line} className="border-t border-bone/15 pt-2 text-bone/80 text-[0.75rem]">
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+              <Reveal delay={0.24}>
                 <div className="flex flex-wrap gap-3 pt-2">
                   <Magnetic>
                     <Link
@@ -117,7 +144,7 @@ export default function HomePage() {
                       data-cursor="hover"
                       className="btn bg-bone text-ink hover:bg-bone-alt"
                     >
-                      View the set
+                      Shop the set <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </Magnetic>
                   <Magnetic>
@@ -126,7 +153,7 @@ export default function HomePage() {
                       data-cursor="hover"
                       className="btn border border-bone/40 text-bone hover:bg-bone hover:text-ink"
                     >
-                      Corporate gifting
+                      Bulk gifting
                     </Link>
                   </Magnetic>
                 </div>
@@ -136,95 +163,91 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* The Material */}
-      <section className="py-24 lg:py-32 relative">
-        <Container className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          <Reveal className="lg:col-span-5">
-            <SectionHeader
-              eyebrow="Chapter 02 · The material"
-              title={<>A vegan leather we trust on a real desk.</>}
-              intro="A polyurethane-based faux leather over a fibre backing, finished with hand stitching over MDF cores or steel inserts. We chose it after two years of testing against real leather, recycled leather, cork and several plant-based alternatives."
-            />
-            <div className="mt-8 space-y-5">
-              {[
-                ["Stitched edge", "Hand-finished by artisans in Shahpur Jat."],
-                ["6 mm MDF core", "Squareness that lasts beyond a season."],
-                ["Wipe-clean", "A soft damp cloth and a quiet routine."],
-              ].map(([t, b]) => (
-                <div key={t} className="grid grid-cols-[140px_1fr] gap-4 border-t border-ink/15 pt-4">
-                  <p className="label">{t}</p>
-                  <p className="text-sm text-ink/80 leading-relaxed">{b}</p>
-                </div>
-              ))}
+      {/* New arrivals */}
+      <section className="py-20 lg:py-24 bg-bone-alt border-y border-ink/10">
+        <Container>
+          <Reveal>
+            <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+              <div className="space-y-3">
+                <p className="label">Just landed</p>
+                <h2 className="font-display text-display-md leading-tight text-balance">
+                  New arrivals.
+                </h2>
+              </div>
+              <Link href="/shop?sort=newest" className="label hover:text-brass underline-animate" data-cursor="hover">
+                Shop new →
+              </Link>
+            </div>
+          </Reveal>
+          <StaggerGroup className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-7" staggerChildren={0.1}>
+            {newArrivals.map((p) => (
+              <StaggerItem key={p.slug}>
+                <ProductCard product={p} compact />
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </Container>
+      </section>
+
+      {/* Reviews / social proof */}
+      <ReviewsStrip />
+
+      {/* Why V-Cube — short, scannable, image right */}
+      <section className="py-20 lg:py-24">
+        <Container className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div className="lg:col-span-6 space-y-6">
+            <Reveal>
+              <p className="label">Why V-Cube</p>
+              <h2 className="font-display text-display-md leading-tight text-balance mt-3">
+                Premium build. Honest pricing. Made in Shahpur Jat.
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 pt-2">
+                {[
+                  ["2.4 mm leather", "Twice the thickness of fast-fashion mats."],
+                  ["6 mm MDF cores", "Trays and holders that hold their square."],
+                  ["Stitched edges", "Hand-finished — no fraying."],
+                  ["Wipes clean", "Soft damp cloth, daily."],
+                  ["Free shipping", "On orders over ₹2,000, anywhere in India."],
+                  ["30-day returns", "Unused, in original packaging."],
+                ].map(([t, b]) => (
+                  <li key={t as string} className="border-t border-ink/12 pt-3">
+                    <p className="label">{t}</p>
+                    <p className="text-sm text-ink/75 leading-relaxed mt-1">{b}</p>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+            <Reveal delay={0.18}>
               <Magnetic>
                 <Link href="/the-material" className="btn-outline mt-4" data-cursor="hover">
-                  Read the full note
+                  Read the material note
                 </Link>
               </Magnetic>
-            </div>
+            </Reveal>
+          </div>
+          <Reveal className="lg:col-span-6">
+            <Placeholder label="Atelier — stitched edge macro" ratio="4 / 5" tone="warm" />
           </Reveal>
-          <StaggerGroup className="lg:col-span-7 grid grid-cols-2 gap-4 lg:gap-6">
-            <StaggerItem>
-              <Placeholder label="Atelier — cutting table" ratio="4 / 5" tone="warm" className="mt-12" />
-            </StaggerItem>
-            <StaggerItem>
-              <Placeholder label="Stitched edge — macro" ratio="4 / 5" tone="navy" />
-            </StaggerItem>
-            <StaggerItem>
-              <Placeholder label="Tan mat in window light" ratio="4 / 5" tone="tan" />
-            </StaggerItem>
-            <StaggerItem>
-              <Placeholder label="MDF core layer" ratio="4 / 5" tone="warm" className="mt-8" />
-            </StaggerItem>
-          </StaggerGroup>
         </Container>
       </section>
 
-      {/* Bestseller carousel */}
-      <section className="py-24 lg:py-28 bg-bone-alt border-y border-ink/10">
-        <Container>
-          <Reveal>
-            <div className="flex items-end justify-between flex-wrap gap-4 mb-12">
-              <SectionHeader eyebrow="Chapter 03 · Bestsellers" title={<>Most-ordered, most repeated.</>} />
-              <Link href="/shop" className="label hover:text-brass transition-colors underline-animate" data-cursor="hover">View all →</Link>
-            </div>
-          </Reveal>
-          <StaggerGroup className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8" staggerChildren={0.1}>
-            {bestsellers.map((p) => (
-              <StaggerItem key={p.slug}>
-                <ProductCard product={p} />
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </Container>
-      </section>
-
-      {/* Trust strip */}
-      <section className="py-14 border-b border-ink/10">
-        <Container>
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            {brand.trust.map((t) => (
-              <StaggerItem key={t}>
-                <p className="label">{t}</p>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </Container>
-      </section>
-
-      {/* Lifestyle strip */}
+      {/* Lifestyle marquee */}
       <LifestyleStrip />
 
-      {/* Journal teaser */}
-      <section className="py-24 lg:py-32">
+      {/* Journal — kept compact, lower on page */}
+      <section className="py-20 lg:py-24">
         <Container>
           <Reveal>
-            <div className="flex items-end justify-between flex-wrap gap-4 mb-12">
-              <SectionHeader eyebrow="Chapter 04 · Journal" title={<>Notes from the atelier.</>} />
-              <Link href="/journal" className="label hover:text-brass transition-colors underline-animate" data-cursor="hover">All articles →</Link>
+            <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+              <SectionHeader eyebrow="Journal" title={<>Notes from the atelier.</>} />
+              <Link href="/journal" className="label hover:text-brass underline-animate" data-cursor="hover">
+                All articles →
+              </Link>
             </div>
           </Reveal>
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10" staggerChildren={0.12}>
+          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10" staggerChildren={0.1}>
             {journal.map((a) => (
               <StaggerItem key={a.slug}>
                 <Link href={`/journal/${a.slug}`} className="group block" data-cursor="hover">
@@ -233,12 +256,11 @@ export default function HomePage() {
                       <Placeholder label={`Journal — ${a.slug}`} ratio="4 / 3" tone="warm" />
                     </div>
                   </div>
-                  <div className="pt-5 space-y-2">
+                  <div className="pt-4 space-y-1.5">
                     <p className="label">{a.category} · {a.readingTime}</p>
-                    <h3 className="font-display text-2xl leading-snug text-balance group-hover:text-brass transition-colors">
+                    <h3 className="font-display text-xl leading-snug text-balance group-hover:text-brass transition-colors">
                       <span className="underline-animate">{a.title}</span>
                     </h3>
-                    <p className="text-sm text-ink/75 leading-relaxed">{a.dek}</p>
                   </div>
                 </Link>
               </StaggerItem>

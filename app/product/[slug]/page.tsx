@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { Accordion } from "@/components/commerce/Accordion";
 import { Placeholder } from "@/components/commerce/Placeholder";
 import { ProductCard } from "@/components/commerce/ProductCard";
+import { Stars } from "@/components/commerce/Stars";
 import { products, getProduct } from "@/data/products";
 import { brand } from "@/data/brand";
 import { ProductBuyPanel } from "./ProductBuyPanel";
@@ -114,6 +115,26 @@ export default function ProductPage({ params }: Props) {
                 <p className="label mb-4">{product.category}{product.bestSeller ? " · Bestseller" : ""}</p>
                 <h1 className="font-display text-display-lg leading-[1.05] text-balance">{product.name}</h1>
                 {product.blurb && <p className="mt-3 font-display text-2xl text-ink/70 italic">{product.blurb}</p>}
+
+                {(product.rating || product.inStock || product.shipsIn) && (
+                  <div className="flex items-center gap-4 mt-5 flex-wrap">
+                    {product.rating && product.reviewCount && (
+                      <Stars value={product.rating} reviewCount={product.reviewCount} size="md" />
+                    )}
+                    {product.inStock && (
+                      <span className="inline-flex items-center gap-1.5 text-[0.7rem] tracking-[0.18em] uppercase text-ink/70">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-700/80" />
+                        In stock
+                      </span>
+                    )}
+                    {product.shipsIn && (
+                      <span className="text-[0.7rem] tracking-[0.18em] uppercase text-ink/70">
+                        {product.shipsIn}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <p className="mt-5 text-base text-ink/80 leading-relaxed text-pretty">
                   {product.description}
                 </p>

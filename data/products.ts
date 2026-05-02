@@ -27,6 +27,10 @@ export interface Product {
   bestSeller?: boolean;
   imageCount: number;
   blurb?: string;
+  rating?: number;
+  reviewCount?: number;
+  inStock?: boolean;
+  shipsIn?: string;
 }
 
 export const products: Product[] = [
@@ -51,6 +55,10 @@ export const products: Product[] = [
     pairsWith: ["mouse-pad", "pen-holder", "coaster-set"],
     imageCount: 4,
     blurb: "The desk, undivided.",
+    rating: 4.8,
+    reviewCount: 12480,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "desk-mat-dual-color",
@@ -75,6 +83,10 @@ export const products: Product[] = [
     fromPrice: 1290,
     pairsWith: ["mouse-pad", "valet-tray", "mobile-stand"],
     imageCount: 3,
+    rating: 4.7,
+    reviewCount: 3210,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "executive-v-cube-set",
@@ -102,6 +114,10 @@ export const products: Product[] = [
     pairsWith: ["dining-table-placemats", "desk-mat-dual-color", "mouse-pad"],
     imageCount: 5,
     blurb: "One desk, six considered objects.",
+    rating: 4.9,
+    reviewCount: 2840,
+    inStock: true,
+    shipsIn: "Ships in 48 hours",
   },
   {
     slug: "mouse-pad",
@@ -122,6 +138,10 @@ export const products: Product[] = [
     fromPrice: 590,
     pairsWith: ["desk-mat-stitched", "pen-holder", "valet-tray"],
     imageCount: 3,
+    rating: 4.7,
+    reviewCount: 8910,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "valet-tray",
@@ -141,6 +161,10 @@ export const products: Product[] = [
     fromPrice: 990,
     pairsWith: ["coaster-set", "tissue-holder", "pen-holder"],
     imageCount: 3,
+    rating: 4.8,
+    reviewCount: 5670,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "pen-holder",
@@ -159,6 +183,10 @@ export const products: Product[] = [
     fromPrice: 690,
     pairsWith: ["desk-mat-stitched", "valet-tray", "mouse-pad"],
     imageCount: 3,
+    rating: 4.7,
+    reviewCount: 4320,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "coaster-set",
@@ -178,6 +206,10 @@ export const products: Product[] = [
     fromPrice: 790,
     pairsWith: ["valet-tray", "tissue-holder", "dining-table-placemats"],
     imageCount: 3,
+    rating: 4.8,
+    reviewCount: 3120,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "tissue-holder",
@@ -194,6 +226,10 @@ export const products: Product[] = [
     fromPrice: 1190,
     pairsWith: ["valet-tray", "coaster-set", "mobile-stand"],
     imageCount: 3,
+    rating: 4.6,
+    reviewCount: 2480,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "mobile-stand",
@@ -209,6 +245,10 @@ export const products: Product[] = [
     fromPrice: 890,
     pairsWith: ["desk-mat-stitched", "pen-holder", "tissue-holder"],
     imageCount: 3,
+    rating: 4.7,
+    reviewCount: 6740,
+    inStock: true,
+    shipsIn: "Ships in 24 hours",
   },
   {
     slug: "dining-table-placemats",
@@ -228,6 +268,10 @@ export const products: Product[] = [
     fromPrice: 2390,
     pairsWith: ["coaster-set", "valet-tray", "tissue-holder"],
     imageCount: 3,
+    rating: 4.8,
+    reviewCount: 4180,
+    inStock: true,
+    shipsIn: "Ships in 48 hours",
   },
 ];
 
