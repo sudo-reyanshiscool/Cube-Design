@@ -25,9 +25,14 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-bone/95 backdrop-blur-sm border-b border-ink/10">
-      <div className="bg-ink text-bone">
-        <Container className="flex justify-center items-center py-2 text-[0.7rem] tracking-[0.18em] uppercase">
-          Free shipping across India on orders over ₹2,000
+      <div className="bg-[#8a1f1f] text-bone">
+        <Container className="flex justify-center items-center gap-3 py-2 text-[0.7rem] tracking-[0.18em] uppercase text-center">
+          <span className="font-medium">Super Sale — up to 68% off</span>
+          <span aria-hidden className="opacity-50">·</span>
+          <span className="hidden sm:inline">Free shipping pan India over ₹2,000</span>
+          <Link href="/shop" className="underline-offset-4 underline decoration-bone/50 hover:decoration-bone">
+            Shop now
+          </Link>
         </Container>
       </div>
       <Container className="flex items-center justify-between py-5 lg:py-6">

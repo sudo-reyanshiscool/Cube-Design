@@ -5,7 +5,7 @@ import { ColourSwatchGroup } from "@/components/commerce/ColourSwatch";
 import { SizeSelector } from "@/components/commerce/SizeSelector";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { useCart } from "@/lib/cart";
-import { formatINR } from "@/lib/format";
+import { formatINR, discountPct } from "@/lib/format";
 import type { Product } from "@/data/products";
 import type { ColourName } from "@/tokens";
 import { Minus, Plus } from "lucide-react";
@@ -17,6 +17,7 @@ export function ProductBuyPanel({ product }: { product: Product }) {
   const add = useCart((s) => s.add);
 
   const unitPrice = product.fromPrice ?? 0;
+  const off = discountPct(product.mrp, product.fromPrice);
 
   const handleAdd = () => {
     if (!unitPrice) return;
@@ -37,14 +38,27 @@ export function ProductBuyPanel({ product }: { product: Product }) {
 
   return (
     <div id="buy-panel" className="space-y-6">
-      <div className="flex items-baseline justify-between">
-        <p className="font-display text-3xl">
-          {unitPrice ? `from ${formatINR(unitPrice)}` : "Enquire for pricing"}
-        </p>
+      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+        <div className="flex items-baseline gap-3 flex-wrap">
+          <p className="font-display text-3xl">
+            {unitPrice ? `from ${formatINR(unitPrice)}` : "Enquire for pricing"}
+          </p>
+          {product.mrp && off !== null && (
+            <>
+              <span className="text-ink/45 line-through text-lg">{formatINR(product.mrp)}</span>
+              <span className="bg-[#8a1f1f] text-bone text-[0.65rem] tracking-[0.2em] uppercase px-2 py-1">
+                Save {off}%
+              </span>
+            </>
+          )}
+        </div>
         {product.colourPairs && (
           <p className="label">{product.colourPairs.length} dual-tone pairs</p>
         )}
       </div>
+      <p className="text-[0.65rem] tracking-[0.2em] uppercase text-ink/55">
+        Inclusive of all taxes
+      </p>
 
       <div>
         <p className="label mb-3">Colour · {colour}</p>

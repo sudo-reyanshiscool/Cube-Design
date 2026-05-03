@@ -7,6 +7,7 @@ import { Placeholder } from "@/components/commerce/Placeholder";
 import { useCart, cartSubtotal } from "@/lib/cart";
 import { formatINR } from "@/lib/format";
 import { brand } from "@/data/brand";
+import { getProduct } from "@/data/products";
 import { Minus, Plus } from "lucide-react";
 
 export function CartView() {
@@ -70,7 +71,7 @@ export function CartView() {
         <ul className="lg:col-span-8 divide-y divide-ink/15">
           {lines.map((l) => (
             <li key={l.id} className="grid grid-cols-[100px_1fr_auto] gap-6 py-6 items-start">
-              <Placeholder label={l.name} ratio="1 / 1" />
+              <Placeholder label={l.name} ratio="1 / 1" src={getProduct(l.slug)?.imageUrl} sizes="100px" />
               <div>
                 <p className="font-display text-xl">{l.name}</p>
                 <p className="label mt-1">{l.colour}{l.size ? ` · ${l.size}` : ""}</p>

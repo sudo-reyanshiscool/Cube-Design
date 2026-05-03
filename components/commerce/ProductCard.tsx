@@ -5,7 +5,7 @@ import type { Product } from "@/data/products";
 import { Placeholder } from "./Placeholder";
 import { ColourSwatch } from "./ColourSwatch";
 import { Stars } from "./Stars";
-import { formatPriceFrom, formatINR } from "@/lib/format";
+import { formatPriceFrom, formatINR, discountPct } from "@/lib/format";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useCart } from "@/lib/cart";
@@ -28,6 +28,7 @@ export function ProductCard({
   void priority;
 
   const unitPrice = product.fromPrice ?? 0;
+  const off = discountPct(product.mrp, product.fromPrice);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -59,11 +60,19 @@ export function ProductCard({
             label={`${product.name} — ${hovered ? "angle" : "front"}`}
             ratio="4 / 5"
             tone={product.category === "Sets" ? "navy" : "warm"}
+            src={hovered && product.imageUrls?.[1] ? product.imageUrls[1] : product.imageUrl}
+            priority={priority}
+            sizes="(min-width: 1024px) 25vw, 50vw"
           />
         </motion.div>
 
         {/* Top-left badges stack */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          {off !== null && (
+            <span className="bg-[#8a1f1f] text-bone text-[0.6rem] tracking-[0.2em] uppercase px-2 py-1">
+              {off}% off
+            </span>
+          )}
           {product.bestSeller && (
             <span className="bg-ink text-bone text-[0.6rem] tracking-[0.2em] uppercase px-2 py-1">
               Bestseller
@@ -130,16 +139,23 @@ export function ProductCard({
               </span>
             )}
           </div>
-          <p className="text-sm font-medium text-ink whitespace-nowrap">
+          <div className="text-right whitespace-nowrap">
             {product.fromPrice ? (
               <>
-                <span className="text-[0.65rem] text-ink/55 mr-1 tracking-wider uppercase">from</span>
-                {formatINR(product.fromPrice)}
+                <p className="text-sm font-medium text-ink leading-tight">
+                  <span className="text-[0.65rem] text-ink/55 mr-1 tracking-wider uppercase">from</span>
+                  {formatINR(product.fromPrice)}
+                </p>
+                {product.mrp && off !== null && (
+                  <p className="text-[0.7rem] text-ink/50 leading-tight mt-0.5">
+                    <span className="line-through">{formatINR(product.mrp)}</span>
+                  </p>
+                )}
               </>
             ) : (
               <span className="text-ink/55 text-[0.7rem] tracking-widest uppercase">Enquire</span>
             )}
-          </p>
+          </div>
         </div>
 
         {product.shipsIn && !compact && (
