@@ -52,11 +52,16 @@ export default function ProductPage({ params }: Props) {
     brand: { "@type": "Brand", name: brand.name },
     category: product.category,
     material: product.material,
-    image: [`https://www.vcubedesigns.com/products/${product.slug}/01.jpg`],
+    image: product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls
+      : product.imageUrl
+      ? [product.imageUrl]
+      : [`https://www.vcubedesigns.com/products/${product.slug}/01.jpg`],
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "INR",
       lowPrice: product.fromPrice ?? 0,
+      ...(product.mrp ? { highPrice: product.mrp } : {}),
       availability: "https://schema.org/InStock",
       seller: { "@type": "Organization", name: brand.name },
     },
@@ -83,30 +88,54 @@ export default function ProductPage({ params }: Props) {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Gallery */}
-          <div className="lg:col-span-7 lg:flex lg:gap-4">
-            <ol className="hidden lg:flex flex-col gap-3 w-20 shrink-0">
-              {Array.from({ length: product.imageCount }).map((_, i) => (
-                <li key={i}>
-                  <Placeholder label={`thumb ${i + 1}`} ratio="1 / 1" />
-                </li>
-              ))}
-            </ol>
-            <div className="flex-1 space-y-4">
-              <Placeholder label={`${product.name} — primary`} ratio="4 / 5" tone={product.category === "Sets" ? "navy" : "warm"} />
-              <div className="grid grid-cols-2 gap-4">
-                {Array.from({ length: Math.max(0, product.imageCount - 1) }).slice(0, 2).map((_, i) => (
-                  <Placeholder key={i} label={`${product.name} — angle ${i + 1}`} ratio="1 / 1" />
-                ))}
-              </div>
-              <div className="lg:hidden flex gap-3 overflow-x-auto pb-2">
-                {Array.from({ length: product.imageCount }).map((_, i) => (
-                  <div key={i} className="w-20 shrink-0">
-                    <Placeholder label={`thumb ${i + 1}`} ratio="1 / 1" />
+          {(() => {
+            const imgs = product.imageUrls && product.imageUrls.length > 0
+              ? product.imageUrls
+              : product.imageUrl
+              ? [product.imageUrl]
+              : [];
+            const total = Math.max(imgs.length, product.imageCount);
+            const at = (i: number) => imgs[i] ?? imgs[i % Math.max(imgs.length, 1)];
+            return (
+              <div className="lg:col-span-7 lg:flex lg:gap-4">
+                <ol className="hidden lg:flex flex-col gap-3 w-20 shrink-0">
+                  {Array.from({ length: total }).map((_, i) => (
+                    <li key={i}>
+                      <Placeholder label={`thumb ${i + 1}`} ratio="1 / 1" src={at(i)} sizes="80px" />
+                    </li>
+                  ))}
+                </ol>
+                <div className="flex-1 space-y-4">
+                  <Placeholder
+                    label={`${product.name} — primary`}
+                    ratio="4 / 5"
+                    tone={product.category === "Sets" ? "navy" : "warm"}
+                    src={at(0)}
+                    priority
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    {Array.from({ length: Math.min(2, Math.max(0, total - 1)) }).map((_, i) => (
+                      <Placeholder
+                        key={i}
+                        label={`${product.name} — angle ${i + 1}`}
+                        ratio="1 / 1"
+                        src={at(i + 1)}
+                        sizes="(min-width: 1024px) 25vw, 50vw"
+                      />
+                    ))}
                   </div>
-                ))}
+                  <div className="lg:hidden flex gap-3 overflow-x-auto pb-2">
+                    {Array.from({ length: total }).map((_, i) => (
+                      <div key={i} className="w-20 shrink-0">
+                        <Placeholder label={`thumb ${i + 1}`} ratio="1 / 1" src={at(i)} sizes="80px" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            );
+          })()}
 
           {/* Buy panel */}
           <div className="lg:col-span-5">
@@ -248,6 +277,11 @@ export default function ProductPage({ params }: Props) {
           <span className="text-ink/60">
             {product.fromPrice ? `from ₹${product.fromPrice.toLocaleString("en-IN")}` : "Enquire"}
           </span>
+          {product.mrp && product.fromPrice && product.fromPrice < product.mrp && (
+            <span className="ml-2 text-ink/40 line-through text-xs">
+              ₹{product.mrp.toLocaleString("en-IN")}
+            </span>
+          )}
         </p>
         <a href="#buy-panel" className="btn-primary text-xs px-4 py-2.5">Add to Bag</a>
       </div>

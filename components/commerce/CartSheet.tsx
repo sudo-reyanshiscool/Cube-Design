@@ -5,6 +5,7 @@ import { useCart, cartSubtotal, cartCount } from "@/lib/cart";
 import { formatINR } from "@/lib/format";
 import { brand } from "@/data/brand";
 import { Placeholder } from "./Placeholder";
+import { getProduct } from "@/data/products";
 import { X, Minus, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -67,7 +68,7 @@ export function CartSheet() {
                 {lines.map((l) => (
                   <li key={l.id} className="flex gap-4 py-5">
                     <div className="w-20 shrink-0">
-                      <Placeholder label={l.name} ratio="1 / 1" />
+                      <Placeholder label={l.name} ratio="1 / 1" src={getProduct(l.slug)?.imageUrl} sizes="80px" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium leading-tight">{l.name}</p>

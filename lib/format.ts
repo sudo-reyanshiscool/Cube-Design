@@ -14,6 +14,11 @@ export function formatPriceFrom(price: number | null | undefined, fromPrice?: nu
   return "Enquire for pricing";
 }
 
+export function discountPct(mrp: number | null | undefined, sale: number | null | undefined): number | null {
+  if (!mrp || !sale || sale >= mrp) return null;
+  return Math.round(((mrp - sale) / mrp) * 100);
+}
+
 export function cn(...inputs: (string | undefined | false | null)[]): string {
   return inputs.filter(Boolean).join(" ");
 }

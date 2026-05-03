@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/format";
 
 export function Placeholder({
@@ -5,11 +6,17 @@ export function Placeholder({
   ratio = "4 / 3",
   className,
   tone = "warm",
+  src,
+  priority,
+  sizes,
 }: {
   label: string;
   ratio?: string;
   className?: string;
   tone?: "warm" | "ink" | "navy" | "tan";
+  src?: string;
+  priority?: boolean;
+  sizes?: string;
 }) {
   const bg = {
     warm: "bg-[#E6DFD2]",
@@ -17,6 +24,29 @@ export function Placeholder({
     navy: "bg-navy text-bone",
     tan: "bg-tan/80 text-bone",
   }[tone];
+
+  if (src) {
+    return (
+      <div
+        className={cn(
+          "relative overflow-hidden border border-ink/8 bg-bone-alt",
+          className
+        )}
+        style={{ aspectRatio: ratio }}
+      >
+        <Image
+          src={src}
+          alt={label}
+          fill
+          sizes={sizes ?? "(min-width: 1024px) 33vw, 100vw"}
+          priority={priority}
+          className="object-cover"
+        />
+        <div className="absolute inset-0 pointer-events-none border border-ink/10" aria-hidden="true" />
+      </div>
+    );
+  }
+
   return (
     <div
       data-placeholder="true"
